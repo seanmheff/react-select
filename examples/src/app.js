@@ -207,11 +207,19 @@ var SelectedValuesFieldCreate = React.createClass({
 					delimiter=","
 					multi={true}
 					allowCreate={true}
+					beforeCreate={this.beforeCreate}
 					placeholder="Select your favourite(s)"
 					options={ops}
 					onChange={logChange} />
 			</div>
 		);
+	},
+	beforeCreate: function(value) {
+		if (value.indexOf('lol') > -1) {
+			return {
+				label: value, value: Math.random() * 1000
+			}
+		}
 	}
 });
 

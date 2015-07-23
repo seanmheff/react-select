@@ -17,6 +17,7 @@ var Select = React.createClass({
 		allowCreate: React.PropTypes.bool,         // wether to allow creation of new entries
 		asyncOptions: React.PropTypes.func,        // function to call to get options
 		autoload: React.PropTypes.bool,            // whether to auto-load the default async options set
+		beforeCreate: React.PropTypes.func,
 		className: React.PropTypes.string,         // className for the outer element
 		clearable: React.PropTypes.bool,           // should it be possible to reset value
 		clearAllText: React.PropTypes.string,      // title for the "clear" control when multi: true
@@ -265,7 +266,19 @@ var Select = React.createClass({
 	},
 
 	addValue: function(value) {
-		this.setValue(this.state.values.concat(value));
+		if (this.props.beforeCreate) {
+			var newVal = null;
+			if (typeof value === 'string') {
+				newVal = this.props.beforeCreate(value);
+			} else {
+				newVal = this.props.beforeCreate(value.value);
+			}
+			if (newVal) {
+				this.setValue(this.state.values.concat(newVal));
+			}
+		} else {
+			this.setValue(this.state.values.concat(value));
+		}
 	},
 
 	popValue: function() {
